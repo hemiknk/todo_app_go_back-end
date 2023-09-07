@@ -1,16 +1,25 @@
 package main
 
 import (
-	"database/sql"
+	"fmt"
 	"log"
 	"os"
 
 	"github.com/hemiknk/todo_app_go_back-end/internal/db"
+
+	"github.com/joho/godotenv"
+
+	_ "github.com/lib/pq"
 	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
-	conn, err := db.GetConnection()
+	err := godotenv.Load()
+	if err != nil {
+		panic(fmt.Sprintf("can't load .env file: %v", err))
+	}
+
+	err = db.SetUpConnection()
 	if err != nil {
 		panic(err)
 	}
@@ -20,7 +29,7 @@ func main() {
 	}
 
 	if os.Args[1] == "up" {
-		err = MigrateUp(conn)
+		err = MigrateUp()
 		if err != nil {
 			panic(err)
 		}
@@ -30,7 +39,7 @@ func main() {
 	}
 
 	if os.Args[1] == "down" {
-		err = MigrateDown(conn)
+		err = MigrateDown()
 		if err != nil {
 			panic(err)
 		}
@@ -42,7 +51,7 @@ func main() {
 	log.Println("unknown command, expected up or down")
 }
 
-func MigrateUp(db *sql.DB) error {
+func MigrateUp() error {
 	query := `
 		CREATE TABLE IF NOT EXISTS todo (
 			id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -56,7 +65,7 @@ func MigrateUp(db *sql.DB) error {
 
 	log.Println("Migrationg up...")
 
-	_, err := db.Exec(query)
+	_, err := db.Conn.Exec(query)
 	if err != nil {
 		return err
 	}
@@ -64,13 +73,13 @@ func MigrateUp(db *sql.DB) error {
 	return nil
 }
 
-func MigrateDown(db *sql.DB) error {
+func MigrateDown() error {
 	query := `
 		DROP TABLE IF EXISTS todo;
 	`
 	log.Println("Migrationg down...")
 
-	_, err := db.Exec(query)
+	_, err := db.Conn.Exec(query)
 	if err != nil {
 		return err
 	}

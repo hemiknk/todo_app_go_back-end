@@ -4,18 +4,11 @@ import (
 	"database/sql"
 	"fmt"
 	"os"
-
-	"github.com/joho/godotenv"
-	_ "github.com/lib/pq"
-	_ "github.com/mattn/go-sqlite3"
 )
 
-func GetConnection() (*sql.DB, error) {
-	err := godotenv.Load()
-	if err != nil {
-		return nil, fmt.Errorf("can't load .env file: %w", err)
-	}
+var Conn *sql.DB
 
+func SetUpConnection() error {
 	env := os.Getenv("DEV_ENV")
 
 	var db *sql.DB
@@ -29,7 +22,7 @@ func GetConnection() (*sql.DB, error) {
 
 		db, err = sql.Open(driverName, dbPath)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	case "false":
 		host := os.Getenv("PG_DB_HOST")
@@ -43,11 +36,12 @@ func GetConnection() (*sql.DB, error) {
 
 		db, err = sql.Open(driverName, connStr)
 		if err != nil {
-			return nil, err
+			return err
 		}
 	default:
-		return nil, fmt.Errorf("unknown env var DEV_ENV expected true or false")
+		return fmt.Errorf("unknown env var DEV_ENV expected true or false")
 	}
+	Conn = db
 
-	return db, nil
+	return nil
 }
