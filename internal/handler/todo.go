@@ -28,7 +28,11 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "text/html")
 
-	err = t.Execute(w, nil)
+	items, err := model.TodoList()
+	if err != nil {
+		log.Println("can't get todo list", err)
+	}
+	err = t.Execute(w, items)
 	if err != nil {
 		log.Println("execute template error", err)
 	}

@@ -17,5 +17,27 @@
 </form>
 
     <h2>To Do list</h2>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Completed</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{range .}}
+        <tr>
+            <td>{{.Title}}</td>
+            <td>{{.Done}}</td>
+            <td>
+                <a href="/edit/{{.ID}}" class="btn btn-info btn-xs">Complete</a>
+                <a href="/delete/{{.ID}}" class="btn btn-danger btn-xs">Delete</a>
+
+            </td>
+            {{end}}
+
+        </tbody>
+    </table>
 </body>
 </html>
