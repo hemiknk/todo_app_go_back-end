@@ -8,6 +8,17 @@ import (
 	"github.com/hemiknk/todo_app_go_back-end/internal/model"
 )
 
+func EditHandler(w http.ResponseWriter, r *http.Request) {
+	// mark item as done
+	id := r.URL.Query().Get("id")
+	err := model.MarkItemAsDone(id)
+	if err != nil {
+		log.Println("can't mark item as done", err)
+	}
+
+	http.Redirect(w, r, "/", http.StatusFound)
+}
+
 func CreateHandler(w http.ResponseWriter, r *http.Request) {
 	title := r.FormValue("title")
 	item := model.ToDoItem{Title: title, Done: false}
@@ -36,4 +47,14 @@ func RenderTemplate(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println("execute template error", err)
 	}
+}
+
+func DeteteItemHandler(w http.ResponseWriter, r *http.Request) {
+	id := r.URL.Query().Get("id")
+	err := model.DeleteItem(id)
+	if err != nil {
+		log.Println("can't delete todo item", err)
+	}
+
+	http.Redirect(w, r, "/", http.StatusFound)
 }

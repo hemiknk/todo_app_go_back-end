@@ -11,6 +11,32 @@ type ToDoItem struct {
 	Done  bool
 }
 
+func MarkItemAsDone(id string) error {
+	query := `
+		UPDATE todo SET done = true WHERE id = ?;
+	`
+
+	_, err := db.Conn.Exec(query, id)
+	if err != nil {
+		return fmt.Errorf("error marking item as done: %v", err)
+	}
+
+	return nil
+}
+
+func DeleteItem(id string) error {
+	query := `
+		DELETE FROM todo WHERE id = ?;
+	`
+
+	_, err := db.Conn.Exec(query, id)
+	if err != nil {
+		return fmt.Errorf("error deleting todo item: %v", err)
+	}
+
+	return nil
+}
+
 func TodoList() ([]ToDoItem, error) {
 	query := `
 		SELECT id, title, done FROM todo;
@@ -36,6 +62,7 @@ func TodoList() ([]ToDoItem, error) {
 
 	return list, nil
 }
+
 func SaveTodoItem(item ToDoItem) error {
 	query := `
 		INSERT INTO todo (title, done) VALUES (?, ?);

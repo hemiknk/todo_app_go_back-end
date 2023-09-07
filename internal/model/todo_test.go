@@ -11,6 +11,98 @@ import (
 	"github.com/hemiknk/todo_app_go_back-end/internal/db"
 )
 
+func TestMarkItemAsDone_Success(t *testing.T) {
+	mockDB, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("Error creating mock database: %v", err)
+	}
+	defer mockDB.Close()
+
+	db.Conn = mockDB
+
+	expectedQuery := `UPDATE todo SET done = true WHERE id = ?;`
+	mock.ExpectExec(regexp.QuoteMeta(expectedQuery)).
+		WithArgs("1").
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	err = MarkItemAsDone("1")
+
+	assert.NoError(t, err)
+
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("Unfulfilled expectations: %s", err)
+	}
+}
+
+func TestMarkItemAsDone_ErrorHandling(t *testing.T) {
+	mockDB, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("Error creating mock database: %v", err)
+	}
+	defer mockDB.Close()
+
+	db.Conn = mockDB
+
+	expectedQuery := `UPDATE todo SET done = true WHERE id = ?;`
+	mock.ExpectExec(regexp.QuoteMeta(expectedQuery)).
+		WithArgs("1").
+		WillReturnError(fmt.Errorf("error marking item as done"))
+
+	err = MarkItemAsDone("1")
+
+	assert.Error(t, err)
+
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("Unfulfilled expectations: %s", err)
+	}
+}
+
+func TestDeleteItem_Success(t *testing.T) {
+	mockDB, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("Error creating mock database: %v", err)
+	}
+	defer mockDB.Close()
+
+	db.Conn = mockDB
+
+	expectedQuery := `DELETE FROM todo WHERE id = ?;`
+	mock.ExpectExec(regexp.QuoteMeta(expectedQuery)).
+		WithArgs("1").
+		WillReturnResult(sqlmock.NewResult(1, 1))
+
+	err = DeleteItem("1")
+
+	assert.NoError(t, err)
+
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("Unfulfilled expectations: %s", err)
+	}
+}
+
+func TestDeleteItem_ErrorHandling(t *testing.T) {
+	mockDB, mock, err := sqlmock.New()
+	if err != nil {
+		t.Fatalf("Error creating mock database: %v", err)
+	}
+	defer mockDB.Close()
+
+	db.Conn = mockDB
+
+	expectedQuery := `DELETE FROM todo WHERE id = ?;`
+	mock.ExpectExec(regexp.QuoteMeta(expectedQuery)).
+		WithArgs("1").
+		WillReturnError(fmt.Errorf("error deleting todo item"))
+
+	err = DeleteItem("1")
+
+	assert.Error(t, err)
+
+	if err := mock.ExpectationsWereMet(); err != nil {
+		t.Errorf("Unfulfilled expectations: %s", err)
+	}
+}
+
 func TestSaveTodoItem_Success(t *testing.T) {
 	mockDB, mock, err := sqlmock.New()
 	if err != nil {

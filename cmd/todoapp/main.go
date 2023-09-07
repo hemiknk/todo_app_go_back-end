@@ -27,6 +27,8 @@ func main() {
 
 	defer db.Conn.Close()
 
+	http.HandleFunc("/edit", handler.EditHandler)
+	http.HandleFunc("/delete", handler.DeteteItemHandler)
 	http.HandleFunc("/create", handler.CreateHandler)
 	http.HandleFunc("/", handler.RenderTemplate)
 

@@ -31,9 +31,8 @@
             <td>{{.Title}}</td>
             <td>{{.Done}}</td>
             <td>
-                <a href="/edit/{{.ID}}" class="btn btn-info btn-xs">Complete</a>
-                <a href="/delete/{{.ID}}" class="btn btn-danger btn-xs">Delete</a>
-
+                <a href="/delete?id={{.ID}}" class="btn btn-danger btn-xs">Delete</a>
+                <a href="/edit?id={{.ID}}" class="btn btn-info btn-xs">Complete</a>
             </td>
             {{end}}
 
