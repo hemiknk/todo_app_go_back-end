@@ -26,7 +26,7 @@ Simple todo application written in golang
 * run tests `go test ./...`
 
 # Local development
-* clone repository `git clone https://github.com/aprm/todo_app_python_back-end.git`
+* clone repository `git clone git@bitbucket.org:hemikNK/todo_app_go_back-end.git`
 * copy .env-sample to .env end set values
 * run database migrations `go run cmd/migration/main.go up`
 * run application `go run cmd/todoapp/main.go`
