@@ -11,7 +11,7 @@ import (
 	"github.com/joho/godotenv"
 
 	_ "github.com/lib/pq"
-	_ "github.com/mattn/go-sqlite3"
+	_ "modernc.org/sqlite"
 )
 
 func main() {
@@ -32,5 +32,5 @@ func main() {
 	http.HandleFunc("/create", handler.CreateHandler)
 	http.HandleFunc("/", handler.RenderTemplate)
 
-	log.Fatal(http.ListenAndServe("localhost:8018", nil))
+	log.Fatal(http.ListenAndServe("0.0.0.0:8018", nil))
 }

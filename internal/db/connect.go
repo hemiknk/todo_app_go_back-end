@@ -17,7 +17,7 @@ func SetUpConnection() error {
 	switch env {
 	case "true":
 		dbPath := os.Getenv("SQLITE_DB_PATH")
-		driverName = "sqlite3"
+		driverName = "sqlite"
 		var err error
 
 		db, err = sql.Open(driverName, dbPath)
